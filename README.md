@@ -19,3 +19,5 @@ YOLOv8n을 사용해서 동영상을 추론 하기
 YOLOv8n 및 카메라를 사용 해서 추론 하기
 ### [detect_cam_seg](#detect_cam_seg): 
 YOLOv8n-seg을 사용해서 클래스 별로 표시 다르게 하기
+### [source](#source): 
+추론에 사용 하는 동영상
