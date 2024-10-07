@@ -10,9 +10,11 @@ model = YOLO('../yolov8n-seg.pt').to(device)
 
 cap = cv2.VideoCapture(0)
 
-# 클래스 ID (YOLOv8에서 'person'과 'chair'의 클래스 ID를 미리 확인해야 합니다)
-PERSON_CLASS_ID = 0  # 'person'의 클래스 ID
-CHAIR_CLASS_ID = 56  # 'chair'의 클래스 ID (예시, 실제로는 모델 클래스에 맞게 수정)
+# 클래스 ID 
+# 'person'의 클래스 ID
+PERSON_CLASS_ID = 0  
+# 'chair'의 클래스 ID 
+CHAIR_CLASS_ID = 56 
 
 # 동영상을 프레임 단위로 처리
 while cap.isOpened():
@@ -25,26 +27,31 @@ while cap.isOpened():
     # YOLOv8 세그멘테이션 모델을 사용한 추론
     results = model(frame)
 
-    # 추론된 각 객체에 대해 반복
-    boxes = results[0].boxes  # 바운딩 박스 결과
-    masks = results[0].masks  # 세그멘테이션 마스크 결과
+    # 추론된 각 객체에 box정보 및 mask 정보 
+    boxes = results[0].boxes 
+    masks = results[0].masks 
 
     # 박스를 처리하여 사람과 의자를 구분
     for i, box in enumerate(boxes):
         class_id = int(box.cls[0])
 
+        # 사람은 박스로 표시
         if class_id == PERSON_CLASS_ID:
-            # 사람은 박스로 표시
-            xyxy = box.xyxy[0]  # 좌표 가져오기
+            # 좌표 가져오기
+            xyxy = box.xyxy[0] 
+            # 시각화
             cv2.rectangle(frame, (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3])), (0, 255, 0), 2)
+
+        # 의자는 세그멘테이션 마스크로 표시
         elif class_id == CHAIR_CLASS_ID and masks is not None:
-            # 의자는 세그멘테이션 마스크로 표시
-            mask = masks.data[i].cpu().numpy()  # 마스크 가져오기
+            # 마스크 가져오기
+            mask = masks.data[i].cpu().numpy()  
             mask = mask.astype('uint8')
 
             # 마스크를 컬러로 변환하여 오버레이
             color_mask = np.zeros_like(frame, dtype=np.uint8)
-            color_mask[mask == 1] = [0, 0, 255]  # 빨간색으로 표시 (의자)
+            # 빨간색으로 표시
+            color_mask[mask == 1] = [0, 0, 255]
 
             # 의자 마스크를 원본 프레임에 합성
             frame = cv2.addWeighted(frame, 1, color_mask, 0.5, 0)

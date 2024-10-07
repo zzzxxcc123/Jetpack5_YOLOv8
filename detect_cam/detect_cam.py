@@ -3,9 +3,11 @@ import torch
 import cv2
 import numpy as np
 
+# 현재 사용하는 device 확인 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print('Using device: ' + device)
 
+# 모델 불어오기
 model = YOLO('../yolov8n.pt').to(device)
 
 cap = cv2.VideoCapture(0)
@@ -27,7 +29,7 @@ while cap.isOpened():
     # 결과를 화면에 표시
     cv2.imshow('YOLOv8 Video Inference', annotated_frame)
 
-    # 'Q' 키를 누르면 비디오 스트리밍 중단
+    # 'q' 키를 누르면 비디오 스트리밍 중단
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 

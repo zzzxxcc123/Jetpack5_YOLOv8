@@ -3,6 +3,7 @@ import torch
 import cv2
 import numpy as np
 
+# device 확인 하기
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print('Using device: ' + device)
 
